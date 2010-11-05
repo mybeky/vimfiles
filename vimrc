@@ -155,7 +155,7 @@ nmap <leader>ss :SessionSave<cr>
 "let g:session_autoload = 0
 
 " Fast editing of the .vimrc
-map <leader>e :e! $VIM/_vimrc<cr>
+map <leader>e :e! ~/_vimrc<cr>
 
 " When vimrc is edited, reload it
 autocmd! bufwritepost _vimrc source $VIM/_vimrc
