@@ -28,6 +28,7 @@ Supertab                                    *supertab*
     Midword completion                  |supertab-midword|
     Changing default mapping            |supertab-forwardbackward|
     Inserting true tabs                 |supertab-mappingtabliteral|
+    Enhanced longest match support      |supertab-longestenhanced|
     Preselecting the first entry        |supertab-longesthighlight|
 
 ==============================================================================
@@ -59,48 +60,6 @@ b|<Tab>    Hitting <Tab> here will start the completion, allowing you to
 Supertab is configured via several global variables that you can set in your
 |vimrc| file according to your needs. Below is a comprehensive list of
 the variables available.
-
-g:SuperTabDefaultCompletionType             |supertab-defaultcompletion|
-  The default completion type to use. If you program in languages that support
-  omni or user completions, it is highly recommended setting this to
-  'context'.
-
-  For help about built in completion types in vim, see |i_CTRL-X_index|.
-
-g:SuperTabContextDefaultCompletionType      |supertab-contextdefault|
-  The default completion type to use when 'context' is the global default, but
-  context completion has determined that neither omni, user, or file
-  completion should be used in the current context.
-
-g:SuperTabCompletionContexts                |supertab-completioncontexts|
-  Used to configure a list of function names which are used when the global
-  default type is 'context'. These functions will be consulted in order to
-  determine which completion type to use. Advanced users can plug in their own
-  functions here to customize their 'context' completion.
-
-g:SuperTabRetainCompletionDuration          |supertab-duration|
-  This setting determines how long a non-default completion type should be
-  retained as the temporary default. By default supertab will retain the
-  alternate completion type until you leave insert mode.
-
-g:SuperTabMidWordCompletion                 |supertab-midword|
-  This can be used to turn off completion if you are in the middle of a word
-  (word characters immediately preceding and following the cursor).
-
-g:SuperTabMappingForward                    |supertab-forwardbackward|
-g:SuperTabMappingBackward                   |supertab-forwardbackward|
-  If using the tab key for completion isn't for you, then you can use these to
-  set an alternate key to be used for your insert completion needs.
-
-g:SuperTabMappingTabLiteral                 |supertab-mappingtabliteral|
-  For those rare cases where supertab would normal want to start insert
-  completion, but you just want to insert a tab, this setting is used to
-  define the key combination to use to do just that.  By default Ctrl-Tab is
-  used.
-
-g:SuperTabLongestHighlight                  |supertab-longesthighlight|
-  When enabled and you have the completion popup enable and 'longest' in your
-  completeopt, supertab will auto highlight the first selection in the popup.
 
 
 Default Completion Type             *supertab-defaultcompletion*
@@ -253,10 +212,22 @@ Midword completion                  *supertab-midword*
 g:SuperTabMidWordCompletion (default value: 1)
 
 Sets whether or not mid word completion is enabled. When enabled, <tab> will
-kick off completion when ever a non whitespace character is to the left of the
+kick off completion whenever a non whitespace character is to the left of the
 cursor.  When disabled, completion will only occur if the char to the left is
 non whitespace char and the char to the right is not a keyword character (you
 are at the end of the word).
+
+
+Leading space completion            *supertab-leadingspace*
+                                    *g:SuperTabLeadingSpaceCompletion*
+
+g:SuperTabLeadingSpaceCompletion (default value: 1)
+
+Sets whether or not completion is enabled when the preceding character is
+whitespace. When enabled, <tab> will kick off completion whenever a non
+whitespace character is anywhere to the left of the cursor, even if the cursor
+is currently preceded by whitespace.  When disabled, completion will only
+occur if the char to the left is a non whitespace char.
 
 
 Changing the default mapping        *supertab-forwardbackward*
@@ -295,6 +266,31 @@ something that is supported.  Alternatively, you can escape the <tab> with
 <c-v> (see |i_CTRL-V| for more infos).
 
 
+Enhanced longest match support      *supertab-longestenhanced*
+                                    *g:SuperTabLongestEnhanced*
+
+g:SuperTabLongestEnhanced (default value: 0)
+
+When enabled and 'longest' is in your |completeopt| setting, supertab will
+provide an enhanced longest match support where typing one or more letters and
+hitting tab again while in a completion mode will complete the longest common
+match using the new text in the buffer.
+
+For example, say you have a buffer with the following contents:
+  FooBarFoo
+  FooBar
+  Foo
+  FooBarBaz
+And you then type F<tab>.  Vim's builtin longest support will complete the
+longest common text 'Foo' and offer 'FooBarFoo', 'FooBar', 'Foo', and
+'FooBarBaz' as possible completions.  With supertab's longest match
+enhancement disabled, typing B<tab> while still in the completion mode will
+end up completing 'FooBarBaz' or 'FooBarFoo' depending your settings, instead
+of the next longest common match of 'FooBar'.  With supertab's enhanced
+longest match feature enabled, the typing of B<tab> will result in the next
+longest text being completed.
+
+
 Preselecting the first entry        *supertab-longesthighlight*
                                     *g:SuperTabLongestHighlight*
 
@@ -304,5 +300,13 @@ Sets whether or not to pre-highlight the first match when completeopt has the
 popup menu enabled and the 'longest' option as well. When enabled, <tab> will
 kick off completion and pre-select the first entry in the popup menu, allowing
 you to simply hit <enter> to use it.
+
+
+Mapping <cr> to end completion      *supertab-crmapping*
+                                    *g:SuperTabCrMapping*
+
+g:SuperTabCrMapping (default value: 1)
+
+When enabled, <cr> will cancel completion mode preserving the current text.
 
 vim:tw=78:ts=8:ft=help:norl:
