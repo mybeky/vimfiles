@@ -7,3 +7,6 @@
 [submodule "bundle/neocomplcache"]
 	path = bundle/neocomplcache
 	url = https://github.com/Shougo/neocomplcache.git
+[submodule "bundle/fuf"]
+	path = bundle/fuf
+	url = https://github.com/vim-scripts/FuzzyFinder.git
